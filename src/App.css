@@ -1,38 +1,111 @@
-.App {
-  text-align: center;
+/* Navbar style */
+.nav-div {
+    height:70px;
+    margin-left: 220px;
+    box-shadow: 0px 1px 3px black;
+    /* z-index: 6; */
+}
+.userImage {
+  width: 30px;
+  border-radius: 20px;
+  margin: 0 10px;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+/* dashboard style  */
+.ttslogo {
+  width:60%;
+  margin: -10px 0 0 30px;
 }
+.sidenav {
+    height: 100%;
+    width: 220px;
+    position: fixed;
+    /* z-index: 5; */
+    top: 0;
+    left: 0;
+    background-color: #111;
+    overflow-x: hidden;
+    /* padding-top: 20px; */
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
   }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+  
+  .sidenav a {
+    padding: 9px 14px 9px 20px;
+    text-decoration: none;
+    font-size: 18px;
+    color: #818181;
+    display: block;
+    font-weight: 700;
+    transition: 0.5s ease;
   }
-  to {
-    transform: rotate(360deg);
+  
+  .sidenav a:hover {
+    color: black;
+    background: white;
   }
+  
+  .main {
+    margin: 15px 0 0 230px; /* Same as the width of the sidenav */
+    font-size: 18px; /* Increased text to enable scrolling */
+    padding: 0px 5px;
+  }
+
+
+  .balance {
+    display:flex;
+    width:100%;
+    box-shadow: 0px 0.5px 3px black;
+    background: aliceblue;
+  }
+  .balance .total { 
+    flex: 50%;
+    padding: 10px;  
+    display: flex;  
+  }
+  .balance .today {
+    flex: 50%;
+    padding: 10px;
+    display:flex;
+  }
+  .today-title, .total-title {
+    font-size: 17px;
+    padding: 5px;
+    margin-left: 35px;
+  }
+  .today-amount, .total-amount {
+    font-size: 40px;
+    color: green;
+    margin-left: 55px;
+    font-weight: bold;
+  }
+  .today-ul , .child-ul-today-detail  {
+    list-style-type: none;
+    display:flex;
+  }
+  .today-ul-li ,.total-ul-li {
+    /* margin:5px; */
+    padding:10px;
+    font-size: 13px;
+  }
+  .child-ul-li-today-detail {
+    margin-top: 20px;
+  }
+  .total-ul {
+    list-style-type: none;
+  }
+  
+  
+  @media screen and (max-height: 450px) {
+    .sidenav {padding-top: 15px;}
+    .sidenav a {font-size: 18px;}
+  }
+
+
+
+
+@media (min-width: 600px){
+.navbar-expand-lg {
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+}
 }
