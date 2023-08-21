@@ -6,7 +6,7 @@ const Balance = () => {
       <div className="balance">
         <div className="today">
           <div>
-            <div className="today-title">Today</div>
+            <div className="today-title">Today Sale</div>
             <div className="today-amount">000</div>
           </div>
 
@@ -37,7 +37,7 @@ const Balance = () => {
 
         <div className="total">
           <div>
-            <div className="total-title">Total</div>
+            <div className="total-title">Total Sale</div>
             <div className="total-amount">0000</div>
           </div>
           <div>
