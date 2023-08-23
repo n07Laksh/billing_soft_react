@@ -62,17 +62,20 @@ const AddItem = () => {
       
       const itemData = tx.objectStore("itemData");
 
-      const users = itemData.put(items);
+      const users = itemData.add(items); // add item if not keyPath available 
+      // const users = itemData.put(items); // update existing data if data is not exit add new one;
 
       users.onsuccess = () => {
         tx.oncomplete = () => {
           db.close();
         }
         alert('Item Saved');
+        getIdbData();
       };
 
       users.onerror = (event) => {
-        console.error(` User Error: ${event}`);
+        let err = (event.target.error).toString().slice(16);
+        alert(err);
       };
       
     }
@@ -109,6 +112,36 @@ const AddItem = () => {
     }
     
   }
+
+  const deleteItem = () => {
+    const dbPromise = indexedDB.open('items', 2);
+    
+    dbPromise.onsuccess =() => {
+      const db = dbPromise.result;
+
+      const tx = db.transaction("itemData", "readwrite")
+
+      const itemData = tx.objectStore("itemData");
+
+      const delItem = itemData.delete("");
+
+      delItem.onsuccess = () => {
+        alert("Item Deleted");
+        getIdbData();
+      }
+
+      tx.oncomplete = () => {
+        db.close();
+      }
+
+      delItem.onerror = (event) => {
+        let err = (event.target.error).toString().slice(16);
+        alert(err);
+      }
+    }
+
+  }
+
   return (
     <>
       <div className="sale-content-parentdiv">
@@ -183,7 +216,11 @@ const AddItem = () => {
 
         </div>
 
-          <div style={{float:"right",marginRight:"70px"}} className="save-div "><button onClick={handleSave} className="btn btn-primary"><i className="bi bi-save2 me-1"> {"  "}</i> SAVE</button></div>
+          <div style={{float:"right",marginRight:"70px"}} className="save-div "><button onClick={handleSave} className="btn btn-primary"><i className="bi bi-save2 me-1"> {"  "}</i> SAVE</button>
+          
+          <button onClick={deleteItem} className="btn btn-primary ms-1"><i className="bi bi-del me-1"> {"  "}</i> Delete</button>
+
+          </div>
 
       </div>
     </>

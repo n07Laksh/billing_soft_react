@@ -82,7 +82,7 @@ function SaleInvoice() {
   const savePrint = () => {
     window.print();
   };
-  console.log(saleData);
+  // console.log(saleData);
 
   return (
     <>
