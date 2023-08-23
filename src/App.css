@@ -1,6 +1,13 @@
+:root {
+  --blue: #1976d2;
+  --white: #ffffff;
+}
+
+
+
 /* Navbar style */
 .nav-div {
-    height:70px;
+    height:50px;
     margin-left: 220px;
     box-shadow: 0px 1px 3px black;
     /* z-index: 6; */
@@ -24,7 +31,7 @@
     top: 0;
     left: 0;
     background-color: #111;
-    overflow-x: hidden;
+    overflow: hidden;
     /* padding-top: 20px; */
 
   }
@@ -126,6 +133,7 @@
   font-weight: bolder;
 }
 
+
 @media (min-width: 600px){
 .navbar-expand-lg {
     flex-wrap: nowrap;
@@ -138,10 +146,11 @@
 
 /* sale-invoice style  */
 .sale-content-parentdiv {
-  height:87vh;
+  height:88vh;
   margin:10px 10px 0 230px;
   padding:0;
   background: rgb(247, 245, 245);
+  overflow: hidden;
 }
 
 .back-div {
@@ -153,8 +162,211 @@
   font-weight:900;
   height:40px;
 }
+
 .back-div span:hover {
   cursor:pointer;
   color:green;
   font-size:30px;
+}
+.back-div .back-div-add-item-sec {
+  text-align: center;
+  margin-right:20px;
+  float:right;
+  font-size:15px;
+  line-height: 2.4;
+  font-weight: 600;
+}
+.back-div .back-div-add-item-sec:hover {
+  color:#1976d2;
+}
+
+.item-section {
+  display: flex;
+  gap:15px;
+  overflow: hidden;
+}
+
+.lable-txt {
+  font-size: 13px;
+}
+.item-section input , input {
+ height: 25px;
+}
+.item-section input:focus {
+  outline: none;
+  border:1px solid green;
+}
+.tag {
+  width: 80px;
+}
+.name {
+  width:200px;
+}
+.quantity {
+  width:80px;
+}
+.sale-price {
+  width:80px;
+}
+.disc{
+  width:50px;
+}
+.gst {
+  width:50px;
+}
+.amount {
+  width:100px;
+}
+.ruppe-div {
+  float:left;
+  text-align: center;
+  width:25px;
+  height:25px;
+  background-color: var(--blue);
+  color:white;
+}
+.percent-div {
+  float:right;
+  text-align: center;
+  width:25px;
+  height:25px;
+  background-color: var(--blue);
+  color:white;
+}
+
+.add-btn {
+  width:90px;
+  float:right;
+  margin-right:135px;
+}
+
+.add-btn-parent{
+  display:block;
+}
+.space-div {
+  height:50px;
+}
+
+
+/* table  */
+.table-info{
+  font-weight:300;
+  font-size:13px;
+  position: sticky;
+  top: 0;
+}
+.table td {
+font-size:13px;
+}
+.item-list-parent {
+  height:180px;
+  overflow-y:auto;
+}
+
+.sale-invoice-footer {
+  display: flex;
+  padding:10px;
+  overflow:hidden;
+  
+}
+.payment {
+  flex: 75%;
+}
+.print-save {
+  flex: 25%;
+}
+.invoice-no {
+  width:60px;
+}
+select {
+  font-size: 13px;
+    height: 25px;
+}
+.user-info{
+  display:flex;
+}
+
+.print-show{
+  display:none;
+  margin: 20px 10px;
+}
+.shop-details {
+  flex:75%;
+}
+.customer-details {
+  flex:25%;
+}
+.print-shop-logo {
+  width:50px;
+  height:auto;
+}
+.name-head {
+  width:250px;
+}
+.sale-details {
+  display:none;
+}
+
+
+/* printPage setup  */
+@media print {
+  .sidenav-print-hide, .navbar-print-hide, .user-info, .item-section, .back-div, .add-btn, .sale-invoice-footer{
+    display: none;
+  }
+  .print-show, .sale-details {
+    display: block;
+  }
+  .sale-content-parentdiv {
+    margin:10px;
+  }
+  body {
+    color: black; 
+  }
+  .name-head {
+    width:150px;
+  }
+  .item-list-parent {
+    height:auto;
+    overflow:visible;
+    border-bottom:1px solid black;
+  }
+}
+
+.item-list {
+  display:flex;
+  justify-content: left;
+  gap: 10px;
+  margin:10px;
+  padding:20px;
+}
+.price-details, .product-details {
+  flex:50%;
+  margin:10px;
+  padding:5px;
+  box-shadow: 1px 1px 3px black;
+}
+
+label.additem-label {
+  width: 150px;
+  margin: 20px 0 0 20px;
+}
+h6.product-heading {
+  margin: 20px 0 0 20px;
+  font-size:15px;
+  font-weight:600;
+  color:rgb(7, 43, 43);
+}
+
+.sub-total-shelter {
+  padding-right:70px;
+  color: var(--blue);
+  font-weight: bolder;
+}
+.sub-total {
+  padding-right:70px;
+  font-size:12px;
+}
+.calc-amount-txt{
+  width:90px;
+  margin-top:10px;
 }

@@ -1,8 +1,5 @@
 import React, { useState, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import ShopDetails from "./ShopDetails";
-import CustomerDetails from "./CustomerDetails";
-import SaleDetails from "./SaleDetails";
 
 function SaleInvoice() {
   const navigate = useNavigate();
@@ -15,10 +12,8 @@ function SaleInvoice() {
   };
   const [saleData, setSaleData] = useState({
     invoiceType:"",
-    invoiceNum:"",
-    clientName:"",
-    clientContact:"",
-    clientAddress:"",
+    supplierName:"",
+    billNum:"",
     tag: "",
     name: "",
     unit: "KG",
@@ -87,12 +82,7 @@ function SaleInvoice() {
   return (
     <>
       <div className="sale-content-parentdiv">
-        <div className="print-show">
-          <div className="d-flex justify-content-start gap-5">
-            <ShopDetails />
-            <CustomerDetails />
-          </div>
-        </div>
+
         <div className="back-div">
           <span onClick={()=>navigate(-1)}>&larr;</span>
           <Link to="/addItem" className="back-div-add-item-sec">Add Items</Link>
@@ -117,39 +107,40 @@ function SaleInvoice() {
           </div>
 
           <div>
-            <label htmlFor="invoiceNum" className="lable-txt">
-              Invoice No.<span className="text-danger mx-1">*</span>
+            <label htmlFor="supplierName" className="lable-txt">
+              Supplier Name<span className="text-danger mx-1">*</span>
             </label>
             <br />
-            <input type="text" className="invoice-no" name="invoiceNum" value={saleData.invoiceNum} onChange={inputChange}/>
+            <input type="text" name="supplierName" id="supplierName" value={saleData.supplierName} onChange={inputChange}/>
           </div>
 
           <div>
-            <label htmlFor="clientName" className="lable-txt">
-              Client Name<span className="text-danger mx-1">*</span>
+            <label htmlFor="billDate" className="lable-txt">
+              Bill Date
             </label>
             <br />
-            <input type="text" name="clientName" id="clientName" value={saleData.clientName} onChange={inputChange}/>
+            <input
+                onChange={handleDateChange}
+                type="date"
+                value={currentDate}
+                name="date"
+                className="date"
+                // max={currentDate}
+              />
           </div>
 
           <div>
-            <label htmlFor="clientContact" className="lable-txt">
-              Contact Number
-            </label>
-            <br />
-            <input type="text" name="clientContact" id="clientContact" value={saleData.clientContact} onChange={inputChange}/>
-          </div>
-
-          <div>
-            <label htmlFor="clientAddress" className="lable-txt">
-              Client Address
+            <label htmlFor="billNum" className="lable-txt">
+              Purchase Bill No.
             </label>
             <br />
               
-            <input type="text" name="clientAddress" className="clientAddress" value={saleData.clientAddress} onChange={inputChange}/>
+            <input type="text" name="billNum" className="billNum" value={saleData.billNum} onChange={inputChange}/>
           </div>
 
         </div>
+
+
 
         <div className="item-section mt-4 mx-4">
           <div>
@@ -308,20 +299,6 @@ function SaleInvoice() {
         <div className="sale-invoice-footer mx-3 my-1">
           <div className="payment d-flex justify-content-center gap-5">
             <div>
-              <label className="lable-txt" htmlFor="date">
-                Date
-              </label>
-              <br />
-              <input
-                onChange={handleDateChange}
-                type="date"
-                value={currentDate}
-                name="date"
-                className="date"
-                max={currentDate}
-              />
-            </div>
-            <div>
               <label className="lable-txt" htmlFor="payMode">
                 Payment Mode
               </label>
@@ -352,7 +329,6 @@ function SaleInvoice() {
           </div>
 
           <div className="print-save">
-
           <div className="sub-total-shelter d-flex justify-content-between">
             <div>Sub-Total</div>
             <div>0.00</div>
@@ -369,16 +345,12 @@ function SaleInvoice() {
           <div>GRAND TOTAL</div>
             <div>0.00</div>
           </div>
-
             <button onClick={savePrint} className="btn btn-sm btn-primary mt-1 w-75">
               Save & Print
             </button>
           </div>
         </div>
 
-        <div className="sale-details m-4">
-        <SaleDetails />
-        </div>
 
       </div>
     </>

@@ -25,18 +25,19 @@ function Dashboard() {
   });
 
   return (
-    <div>
+    <div className="sidenav-print-hide">
       <div className="sidenav">
-        <a href="">
+        <Link>
           <img src={logoImage} alt="" className="ttslogo" />
-        </a>
-        <a
+        </Link>
+
+        <Link
           className="nav-tab "
           onClick={(event) => openNewWin(event)}
-          href="#services"
         >
           <i className="bi bi-cart-check me-2"></i>Sale
-        </a>
+        </Link>
+
         {show && (
           <div id="sale-drop" className="sale-drop-hide sale-drop-show">
             <ul
@@ -49,12 +50,12 @@ function Dashboard() {
           </div>
         )}
 
-        <a className="nav-tab" href="#clients">
+        <Link to="/purchase" className="nav-tab">
           <i className="bi bi-bag me-1"></i> Purchase
-        </a>
-        <a className="nav-tab" href="#contact">
+        </Link>
+        <Link className="nav-tab">
           <i className="bi bi-boxes me-1"></i> Stocks
-        </a>
+        </Link>
       </div>
     </div>
   );
