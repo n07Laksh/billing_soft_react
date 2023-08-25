@@ -1,6 +1,7 @@
 import React from 'react';
 import Balance from './Balance';
 import HomeContent from './HomeContent';
+import UpdateDB from './UpdateDB';
 
 function Home() {
   return (
@@ -9,6 +10,7 @@ function Home() {
     
         <Balance/>
         <HomeContent />
+        <UpdateDB />
         </div>
     </>
   )

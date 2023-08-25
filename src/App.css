@@ -163,10 +163,10 @@
   height:40px;
 }
 
-.back-div span:hover {
+.back-div .back:hover {
   cursor:pointer;
   color:green;
-  font-size:30px;
+  line-height: 0.2;
 }
 .back-div .back-div-add-item-sec {
   text-align: center;
@@ -254,6 +254,7 @@
   font-size:13px;
   position: sticky;
   top: 0;
+  z-index:10;
 }
 .table td {
 font-size:13px;
@@ -369,4 +370,8 @@ h6.product-heading {
 .calc-amount-txt{
   width:90px;
   margin-top:10px;
+}
+
+.disable{
+  cursor:none;
 }
