@@ -1,6 +1,6 @@
 import React from "react";
 
-const SaleDetails = () => {
+const SaleDetails = (props) => {
   return (
     <div className="d-flex justify-content-end gap-5">
       <div className="sale-texts">
@@ -9,9 +9,9 @@ const SaleDetails = () => {
         <div>Sub-Total</div>
       </div>
       <div className="sale-price">
-        <div>1000</div>
-        <div>180</div>
-        <div>1180</div>
+        <div>{props.total}</div>
+        <div>{props.tax?props.tax:"00"}</div>
+        <div>{props.grandTotal}</div>
       </div>
     </div>
   );

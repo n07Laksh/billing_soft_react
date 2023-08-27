@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import ShopDetails from "./ShopDetails";
 import CustomerDetails from "./CustomerDetails";
 import SaleDetails from "./SaleDetails";
+import Dexie from "dexie";
 
 import { ToastContainer, toast } from 'react-toastify';
 
@@ -15,6 +16,7 @@ function SaleInvoice() {
   const [total, setTotal] = useState();
   const [grandTotal, setGrandTotal] = useState();
   const [balance, setBalance] = useState(0);
+  const [amount, setAmount] = useState(null);
 
   useEffect(() => {
     // Calculate total based on updated addedItems
@@ -28,11 +30,11 @@ function SaleInvoice() {
     tableDiv.current.scrollTop = tableDiv.current.scrollHeight;
   }, [addedItems]);
 
-    // calculate the paid amount from clent (return or give)
-    const checkPaid = (event) => {
-      const val = event.target.value;
+  // calculate the paid amount from clent (return or give)
+  const checkPaid = (event) => {
+    const val = event.target.value;
 
-      if (val.length) {
+    if (val.length) {
       setBalance(total - val);
     } else {
       setBalance(0)
@@ -46,8 +48,9 @@ function SaleInvoice() {
   const handleDateChange = (event) => {
     setCurrentDate(event.target.value);
   };
+
   const [saleData, setSaleData] = useState({
-    invoiceType: "No GST",
+    invoiceType: "NoGST",
     invoiceNum: "",
     clientName: "",
     clientContact: "",
@@ -66,6 +69,14 @@ function SaleInvoice() {
 
   const tableDiv = useRef(); // table parent div
 
+  useEffect(() => {
+    const itemAmount = saleData.quantity * saleData.salePrice;
+    saleData.amount = itemAmount;
+    setAmount(itemAmount)
+   
+  }, [saleData.salePrice, saleData.quantity]);
+
+
   const inputChange = (event) => {
     setSaleData({
       ...saleData,
@@ -74,39 +85,83 @@ function SaleInvoice() {
   };
 
   const addSaleItem = () => {
-    if(saleData.name && saleData.quantity && saleData.salePrice && saleData.amount && saleData.clientName) {
+    if (saleData.name && saleData.quantity && saleData.salePrice && saleData.amount && saleData.clientName && saleData.tag) {
 
-    setAddedItems(prevAddedItems => [...prevAddedItems, saleData]);
+      setAddedItems(prevAddedItems => [...prevAddedItems, saleData]);
 
-      setSaleData({tag: "", name: "", unit: "KG", quantity: "", salePrice: "", disc: "", gst: "", amount: "", });
+      setSaleData({
+        ...saleData,
+        tag: "", name: "", unit: "KG", quantity: "", salePrice: "", disc: "", gst: "", amount: "",
+      });
     } else {
       toast.error("require fields are not empty");
     }
   };
 
-  const savePrint = () => {
-    window.print();
+  const db = new Dexie('saleItems');
+
+  // Define the schema including the new collection
+  db.version(2).stores({
+    // itemData: 'productName', // Existing collection
+    saleItems: 'tag', // New collection
+  });
+
+  const savePrint = async () => {
+    if (addedItems.length > 0) {
+      let existingItems = [];
+
+      for (const item of addedItems) {
+        const existingItem = await db.saleItems.where('tag').equals(item.tag).first();
+        if (existingItem) {
+          existingItems.push(existingItem);
+        }
+      }
+
+      if (existingItems.length > 0) {
+        const duplicateItemsText = existingItems.map(item => item.tag).join(', ');
+        toast.error(`The following items already exist in the collection: "tag" ${duplicateItemsText}`);
+        return;
+      }
+
+      const promises = addedItems.map(async item => {
+        try {
+          await db.saleItems.add(item);
+        } catch (error) {
+          toast.error('Error adding item:', error);
+          return;
+        }
+      });
+
+      await Promise.all(promises);
+      window.print();
+      toast.success('Item added collection');
+      
+      setAddedItems([]);
+    } else {
+      toast.warn("Add Sale Details");
+    }
   };
+
 
   return (
     <>
-    <ToastContainer
-position="top-center"
-autoClose={3000}
-hideProgressBar={false}
-newestOnTop={false}
-closeOnClick
-rtl={false}
-pauseOnFocusLoss
-draggable
-pauseOnHover
-theme="dark"
-/>
+      <ToastContainer
+        position="top-center"
+        autoClose={2000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+      />
       <div className="sale-content-parentdiv">
         <div className="print-show">
           <div className="d-flex justify-content-start gap-5">
-            <ShopDetails />
-            <CustomerDetails />
+            <ShopDetails items={addedItems}/>
+            <CustomerDetails saleData={saleData} />
           </div>
         </div>
         <div className="back-div">
@@ -127,7 +182,7 @@ theme="dark"
               name="invoiceType"
               value={saleData.invoiceType}
             >
-              <option value="No GST">No GST</option>
+              <option value="NoGST">No GST</option>
               <option value="GST">GST</option>
             </select>
           </div>
@@ -153,7 +208,7 @@ theme="dark"
               Contact Number
             </label>
             <br />
-            <input type="number" name="clientContact" id="clientContact" value={saleData.clientContact} onChange={inputChange} />
+            <input type="text" name="clientContact" id="clientContact" value={saleData.clientContact} onChange={inputChange} />
           </div>
 
           <div>
@@ -283,6 +338,7 @@ theme="dark"
               className="gst"
               name="gst"
               value={saleData.gst}
+              disabled={saleData.invoiceType === "NoGST"?true:false}
             />
           </div>
 
@@ -298,7 +354,7 @@ theme="dark"
               id="amount"
               className="amount"
               name="amount"
-              value={saleData.amount}
+              value={amount?amount:saleData.amount}
             />
           </div>
         </div>
@@ -389,7 +445,7 @@ theme="dark"
               </div>
               <div>
                 <label className="lable-txt calc-amount-txt" htmlFor="bal">Balance</label>
-                <input type="text" name="bal" disabled value={balance}/>
+                <input type="text" name="bal" disabled value={balance} />
               </div>
             </div>
           </div>
@@ -398,19 +454,19 @@ theme="dark"
 
             <div className="sub-total-shelter d-flex justify-content-between">
               <div>Sub-Total</div>
-              <div>{total?total:"0.00"}</div>
+              <div>{total ? total : "0.00"}</div>
             </div>
             <div className="sub-total d-flex justify-content-between">
-              <div>add CGST(0%)</div>
+              <div> CGST(0%)</div>
               <div>0.00</div>
             </div>
             <div className="sub-total d-flex justify-content-between">
-              <div>add SGST(0%)</div>
+              <div> SGST(0%)</div>
               <div>0.00</div>
             </div>
             <div className="sub-total-shelter d-flex justify-content-between">
               <div>GRAND TOTAL</div>
-              <div>{grandTotal?grandTotal:"0.00"}</div>
+              <div>{grandTotal ? grandTotal : "0.00"}</div>
             </div>
 
             <button onClick={savePrint} className="btn btn-sm btn-primary mt-1 w-75">
@@ -420,7 +476,7 @@ theme="dark"
         </div>
 
         <div className="sale-details m-4">
-          <SaleDetails />
+          <SaleDetails total={total} grandTotal={grandTotal} />
         </div>
 
       </div>

@@ -2,13 +2,17 @@ import React, { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Dexie from 'dexie'
 
+import { ToastContainer, toast } from 'react-toastify';
+
+import 'react-toastify/dist/ReactToastify.css';
+
 function SaleInvoice() {
   const navigate = useNavigate();
 
   const [addedItems, setAddedItems] = useState([]);
   const [total, setTotal] = useState();
   const [grandTotal, setGrandTotal] = useState();
-  const [balance, setBalance] = useState(0);
+  const [balance, setBalance] = useState();
 
   useEffect(() => {
     // Calculate total based on updated addedItems
@@ -42,8 +46,8 @@ function SaleInvoice() {
     setCurrentDate(event.target.value);
   };
 
-  const [saleData, setSaleData] = useState({
-    invoiceType: "No GST", supplierName: "", billNum: "", tag: "", name: "", unit: "KG", quantity: "", salePrice: "", disc: "", gst: "", amount: "", payMode: "", date: currentDate,
+  const [purchaseData, setPurchaseData] = useState({
+    invoiceType: "NoGST", supplierName: "", billNum: "", tag: "", name: "", unit: "KG", quantity: "", salePrice: "", disc: "", gst: "", amount: "", payMode: "", date: currentDate,
   });
 
   const tableDiv = useRef(); // table parent div
@@ -53,21 +57,21 @@ function SaleInvoice() {
 
 
   const inputChange = (event) => {
-    setSaleData({
-      ...saleData,
+    setPurchaseData({
+      ...purchaseData,
       [event.target.name]: event.target.value,
     });
   };
 
   const addSaleItem = () => {
-    if (saleData.name && saleData.quantity && saleData.salePrice && saleData.amount) {
+    if (purchaseData.name && purchaseData.quantity && purchaseData.salePrice && purchaseData.amount) {
 
-      // setAddedItems([...addedItems, saleData]);
-      setAddedItems(prevAddedItems => [...prevAddedItems, saleData]);
-      setSaleData({ tag: "", name: "", unit: "KG", quantity: "", salePrice: "", disc: "", gst: "", amount: "" });
+      // setAddedItems([...addedItems, purchaseData]);
+      setAddedItems(prevAddedItems => [...prevAddedItems, purchaseData]);
+      setPurchaseData({ tag: "", name: "", unit: "KG", quantity: "", salePrice: "", disc: "", gst: "", amount: "" });
 
     } else {
-      console.log("require fields are not empty");
+      toast.error("require fields are not empty");
     }
   };
 
@@ -84,9 +88,9 @@ function SaleInvoice() {
       const promises = addedItems.map(async item => {
         try {
           await db.perchaseData.add(item);
-          console.log('Item added to new collection:', item);
+          toast.success('Item added to new collection:', item);
         } catch (error) {
-          console.error('Error adding item:', error);
+          toast.error('Error adding item:', error);
         }
       });
       await Promise.all(promises);
@@ -94,12 +98,24 @@ function SaleInvoice() {
       setAddedItems([]);
 
     } else {
-      console.log("Add Purchase Details")
+      toast.warn("Add Purchase Details");
     }
   };
 
   return (
     <>
+    <ToastContainer
+position="top-center"
+autoClose={2000}
+hideProgressBar={false}
+newestOnTop={false}
+closeOnClick
+rtl={false}
+pauseOnFocusLoss
+draggable
+pauseOnHover
+theme="dark"
+/>
       <div className="sale-content-parentdiv">
 
         <div className="back-div">
@@ -118,7 +134,7 @@ function SaleInvoice() {
               onChange={inputChange}
               id="invoice-type"
               name="invoiceType"
-              value={saleData.invoiceType}
+              value={purchaseData.invoiceType}
             >
               <option value="no">No GST</option>
               <option value="gst">GST</option>
@@ -130,7 +146,7 @@ function SaleInvoice() {
               Supplier Name<span className="text-danger mx-1">*</span>
             </label>
             <br />
-            <input type="text" name="supplierName" id="supplierName" value={saleData.supplierName} onChange={inputChange} />
+            <input type="text" name="supplierName" id="supplierName" value={purchaseData.supplierName} onChange={inputChange} />
           </div>
 
           <div>
@@ -154,7 +170,7 @@ function SaleInvoice() {
             </label>
             <br />
 
-            <input type="number" name="billNum" className="billNum" value={saleData.billNum} onChange={inputChange} />
+            <input type="number" name="billNum" className="billNum" value={purchaseData.billNum} onChange={inputChange} />
           </div>
 
         </div>
@@ -173,7 +189,7 @@ function SaleInvoice() {
               id="tag"
               className="tag"
               name="tag"
-              value={saleData.tag}
+              value={purchaseData.tag}
             />
           </div>
           <div>
@@ -187,7 +203,7 @@ function SaleInvoice() {
               id="name"
               className="name"
               name="name"
-              value={saleData.name}
+              value={purchaseData.name}
             />
           </div>
           <div>
@@ -199,7 +215,7 @@ function SaleInvoice() {
               onChange={inputChange}
               id="unit"
               name="unit"
-              value={saleData.unit}
+              value={purchaseData.unit}
             >
               <option value="NO">None</option>
               <option value="BG">Bag (BG)</option>
@@ -236,7 +252,7 @@ function SaleInvoice() {
               id="quantity"
               className="quantity"
               name="quantity"
-              value={saleData.quantity}
+              value={purchaseData.quantity}
             />
           </div>
           <div>
@@ -251,7 +267,7 @@ function SaleInvoice() {
               id="sale-price"
               className="sale-price"
               name="salePrice"
-              value={saleData.salePrice}
+              value={purchaseData.salePrice}
             />
           </div>
           <div>
@@ -266,7 +282,7 @@ function SaleInvoice() {
               id="disc"
               className="disc"
               name="disc"
-              value={saleData.disc}
+              value={purchaseData.disc}
             />
           </div>
           <div>
@@ -281,7 +297,7 @@ function SaleInvoice() {
               id="gst"
               className="gst"
               name="gst"
-              value={saleData.gst}
+              value={purchaseData.gst}
             />
           </div>
 
@@ -297,7 +313,7 @@ function SaleInvoice() {
               id="amount"
               className="amount"
               name="amount"
-              value={saleData.amount}
+              value={purchaseData.amount}
             />
           </div>
         </div>
@@ -359,7 +375,7 @@ function SaleInvoice() {
                 onChange={inputChange}
                 id="payMode"
                 name="payMode"
-                value={saleData.payMode}
+                value={purchaseData.payMode}
               >
                 <option value="cash">Cash</option>
                 <option value="upi">UPI (Online Payment)</option>
@@ -383,19 +399,19 @@ function SaleInvoice() {
           <div className="print-save">
             <div className="sub-total-shelter d-flex justify-content-between">
               <div>Sub-Total</div>
-              <div>{total}</div>
+              <div>{total?total:"0.00"}</div>
             </div>
             <div className="sub-total d-flex justify-content-between">
-              <div>add CGST(0%)</div>
+              <div> CGST(0%)</div>
               <div>0.00</div>
             </div>
             <div className="sub-total d-flex justify-content-between">
-              <div>add SGST(0%)</div>
+              <div> SGST(0%)</div>
               <div>0.00</div>
             </div>
             <div className="sub-total-shelter d-flex justify-content-between">
               <div>GRAND TOTAL</div>
-              <div>{grandTotal}</div>
+              <div>{grandTotal?grandTotal:"0.00"}</div>
             </div>
             <button onClick={savePurchase} className="btn btn-sm btn-primary mt-2 w-75">
               Save
